@@ -1,0 +1,30 @@
+[project]
+name = "compliance-qa-pipeline"
+version = "0.1.0"
+description = "Compliance QA Pipeline"
+requires-python = ">=3.11"
+dependencies = [
+    "azure-identity>=1.26.0",
+    "azure-monitor-opentelemetry>=1.8.10",
+    "azure-search-documents>=12.0.0",
+    "azure-storage-blob>=12.31.0",
+    "fastapi>=0.142.2",
+    "firecrawl-py>=4.47.0",
+    "langchain>=1.3.2",
+    "langchain-community>=0.4.2",
+    "langchain-openai>=1.6.7",
+    "langgraph>=1.2.2",
+    "langsmith>=0.14.4",
+    "opentelemetry-instrumentation-fastapi>=0.65b0",
+    "pandas>=3.0.6",
+    "psycopg2-binary>=2.9.13",
+    "pydantic>=2.13.5",
+    "pypdf>=6.19.0",
+    "python-dotenv>=1.2.4",
+    "redis>=8.1.0",
+    "requests>=2.34.2",
+    "sqlalchemy>=2.1.3",
+    "streamlit>=1.65.0",
+    "uvicorn>=0.54.0",
+    "yt-dlp>=2026.8.19",
+]
