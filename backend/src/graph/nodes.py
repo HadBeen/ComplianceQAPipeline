@@ -20,6 +20,7 @@ logger = logging.getLogger('brand-guardian')
 logging.basicConfig(level=logging.INFO)
 
 # build the first node
+#converts video to txt
 def index_video_node(state:VideoAuditState) -> Dict[str,Any]:
     '''
     Download the ytb video from url
@@ -51,6 +52,7 @@ def index_video_node(state:VideoAuditState) -> Dict[str,Any]:
             os.remove(local_path)
             logger.info(f"Temporary file {local_path} removed.")
             
+        # wait for processing and extract insights     
         raw_insights = vi_service.wait_for_processing(azure_video_id)
         clean_data = vi_service.extract_data(raw_insights)
         logger.info(f"Video insights extracted for video_id: {azure_video_id}")
