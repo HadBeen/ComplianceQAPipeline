@@ -112,6 +112,40 @@ class VideoInderxerService:
             data = response.json()
 
             state = data.get('state')
+            
+            if state == "Processed":
+                return data
+            elif state == "Failed":
+                raise Exception("Video indexing Failed in azure")
+            elif state == "Quarantined":
+                raise Exception("Video quarantined copyright/content policy violation")
+            logger.info(f"Status {state}........30s")
+            time.sleep(30)
+    def extract_data(self,vi_json):
+        '''
+        parse the json into out state format
+        '''
+        transcript_lines = []
+        for v in vi_json.get("videos",[]):
+            for insight in v.get("insights",{}).get("transcript,[]"):
+                transcript_lines.append(insight.get("text"))
+        
+        ocr_lines = []
+        for v in vi_json.get("video",[]):
+            for insight in v.get("insights",{}).get("ocr,[]"):
+                ocr_lines.append(insight.get("text"))
+            
+        return {
+            "transcript":" ".json(transcript_lines) ,
+            "ocr_text": ocr_lines,
+            "video_metadata" :{
+                "duration" : vi_json.get("summerizedInsights",{}).get("duration"),
+                "platform":"youtube"
+            }
+        }
+        
+    
+    
 
         
         
