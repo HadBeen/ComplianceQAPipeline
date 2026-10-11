@@ -1,9 +1,9 @@
 import operator
-from typing import Annotated,List, Dict,Optional,Any,TypeDict 
+from typing import Annotated,List, Dict,Optional,Any,TypedDict 
 
 
 #error report structure 
-class ComplianceIssue(TypeDict):
+class ComplianceIssue(TypedDict):
     category: str
     description: str
     severity: str
@@ -12,7 +12,7 @@ class ComplianceIssue(TypeDict):
 
 #defines the state that pass through the agentic workflow
 
-class VideoAuditState(TypeDict):
+class VideoAuditState(TypedDict):
     '''State for the video audit workflow'''
     
     #inputs

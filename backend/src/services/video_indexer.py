@@ -13,7 +13,7 @@ from azure.identity import DefaultAzureCredential
 logger = logging.getLogger("video-indexer")
 
 
-class VideoInderxerService:
+class VideoIndexerService:
     def __init__(self):
         self.account_id = os.getenv("AZURE_VI_ACCOUNT_ID")
         self.location = os.getenv("AZURE_VI_LOCATION")
