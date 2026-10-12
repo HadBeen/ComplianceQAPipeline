@@ -17,9 +17,9 @@ class VideoIndexerService:
     def __init__(self):
         self.account_id = os.getenv("AZURE_VI_ACCOUNT_ID")
         self.location = os.getenv("AZURE_VI_LOCATION")
-        self.subscription_id = os.getend("AZURE_VI_SUBSCRIPTION_ID")
-        self.resource_group = os.getend("AZURE_VI_RESOURCE_GROUP")
-        self.vi_name = os.getend("AZURE_VI_NAME")
+        self.subscription_id = os.getenv("AZURE_VI_SUBSCRIPTION_ID")
+        self.resource_group = os.getenv("AZURE_VI_RESOURCE_GROUP")
+        self.vi_name = os.getenv("AZURE_VI_NAME")
         self.credential = DefaultAzureCredential()
         
     def get_access_token(self):

@@ -60,7 +60,7 @@ def index_video_node(state:VideoAuditState) -> Dict[str,Any]:
         return clean_data
     except Exception as e:
         logger.error(f"Error in index_video_node: {str(e)}")
-        raise {
+        return {
             "errors":[str(e)],
             "final_status":"FAIL",
             "transcript":"",

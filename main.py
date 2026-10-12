@@ -24,12 +24,13 @@ def run_cli_simulation():
     '''Simulate the video compliance qudit request'''
 
     #generate session id
+    print("ok")
     session_id= str(uuid.uuid4())
     logging.info(f'starting audit session : {session_id}')
 
     # define the initial state
     initial_inputs = {
-        "video_url":"",
+        "video_url":"https://youtu.be/xGhIVEyxayg",
         "video_id":f"vid_{session_id[:8]}",
         "compliance_results":[],
         "errors": []
@@ -65,7 +66,7 @@ def run_cli_simulation():
 
         raise e
 
-if __name__ == "main":
+if __name__ == "__main__":
     run_cli_simulation()
     
         
