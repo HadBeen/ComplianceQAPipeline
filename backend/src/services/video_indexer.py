@@ -80,65 +80,75 @@ class VideoIndexerService:
         
         # upload vid tp azure vi
         
-    def upload_video(self,video_path,video_name):
-        # add in azure a role to the storage blob service (storage blob contributer) and make it a managed one , link it to azure vi service
+    def upload_video(self, video_path, video_name):
+        """Uploads a LOCAL FILE to Azure Video Indexer."""
         arm_token = self.get_access_token()
         vi_token = self.get_account_token(arm_token)
 
         api_url = f"https://api.videoindexer.ai/{self.location}/Accounts/{self.account_id}/Videos"
-
-        parms = {
-            "accessToken" : vi_token,
-            "name" : video_name,
-            "privacy":"Private",
-            "indexingPreset":"Default"
-        }
-        logger.info(f"Uploading file {video_path} to azure ....")
         
-        #open the file on binary and  stream it on azure
-        with open(video_path,'rb') as video_file:
+        params = {
+            "accessToken": vi_token,
+            "name": video_name,
+            "privacy": "Private",
+            "indexingPreset": "Default",
+            # We removed "videoUrl" because we are sending a file payload instead
+        }
+        
+        logger.info(f"Uploading file {video_path} to Azure...")
+        
+        # Open the file in binary mode and stream it to Azure
+        with open(video_path, 'rb') as video_file:
             files = {'file': video_file}
-            response = requests.post(api_url,params =parms,files=files)
+            response = requests.post(api_url, params=params, files=files)
+        
+        if response.status_code != 200:
+            raise Exception(f"Azure Upload Failed: {response.text}")
+            
+        return response.json().get("id")
 
-            if response.status_code != 200:
-                raise Exception(f"Azure upload failed : {response.text}")
-    
-    
-    def wait_for_processing(self,video_id):
-        logger.info(f'Waiting for video {video_id}to process')
+    def wait_for_processing(self, video_id):
+        """Polls status until complete."""
+        logger.info(f"Waiting for video {video_id} to process...")
         while True:
             arm_token = self.get_access_token()
             vi_token = self.get_account_token(arm_token)
             
-            url = f"https://api.videoindexer.ai/{self.location}/Accounts/{self.account_id}/Videos"
-            params = { "accessToken" : vi_token}
-            response = requests.get(url,params=params)
+            url = f"https://api.videoindexer.ai/{self.location}/Accounts/{self.account_id}/Videos/{video_id}/Index"
+            params = {"accessToken": vi_token}
+            response = requests.get(url, params=params)
             data = response.json()
-            state = data.get('state')
+            
+            state = data.get("state")
             if state == "Processed":
+                print('==============================')
+                print(f'managed to return data')
+                print('==============================')
                 return data
             elif state == "Failed":
-                raise Exception("Video indexing Failed in azure")
+                raise Exception("Video Indexing Failed in Azure.")
             elif state == "Quarantined":
-                raise Exception("Video quarantined copyright/content policy violation")
-            logger.info(f"Status : {state}........30s")
+                raise Exception("Video Quarantined (Copyright/Content Policy Violation).")
+            
+            logger.info(f"Status: {state}... waiting 30s")
             time.sleep(30)
+            
     def extract_data(self,vi_json):
         '''
         parse the json into out state format
         '''
         transcript_lines = []
         for v in vi_json.get("videos",[]):
-            for insight in v.get("insights",{}).get("transcript,[]"):
+            for insight in v.get("insights", {}).get("transcript", []):
                 transcript_lines.append(insight.get("text"))
         
         ocr_lines = []
         for v in vi_json.get("video",[]):
-            for insight in v.get("insights",{}).get("ocr,[]"):
+            for insight in v.get("insights",{}).get("ocr",[]):
                 ocr_lines.append(insight.get("text"))
             
         return {
-            "transcript":" ".json(transcript_lines) ,
+            "transcript":" ".join(transcript_lines) ,
             "ocr_text": ocr_lines,
             "video_metadata" :{
                 "duration" : vi_json.get("summerizedInsights",{}).get("duration"),

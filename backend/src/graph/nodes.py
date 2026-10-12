@@ -52,10 +52,12 @@ def index_video_node(state:VideoAuditState) -> Dict[str,Any]:
             os.remove(local_path)
             logger.info(f"Temporary file {local_path} removed.")
             
-        # wait for processing and extract insights     
+        # wait for processing  
         raw_insights = vi_service.wait_for_processing(azure_video_id)
+        # and extract insights    
         clean_data = vi_service.extract_data(raw_insights)
         logger.info(f"Video insights extracted for video_id: {azure_video_id}")
+        logger.info("--- [Node: Indexer] Extraction Complete ---")
         
         return clean_data
     except Exception as e:
@@ -88,15 +90,15 @@ def audio_content_node(state:VideoAuditState) -> Dict[str,Any]:
         )
     
     embeddings = AzureOpenAIEmbeddings(
-        azure_deployment=os.getenv("AZURE_OPENAI_EMBEDDINGS_DEPLOYMENT"),
-        openai_api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+        azure_deployment = os.getenv("AZURE_OPENAI_EMBEDDING_DEPLOYMENT"),
+        openai_api_version = os.getenv("AZURE_OPENAI_API_VERSION"),
     )
     
     vector_store = AzureSearch(
-        azure_search_endpoint=os.getenv("AZURE_SEARCH_ENDPOINT"),
-        azure_search_key=os.getenv("AZURE_SEARCH_API_KEY"),
-        azure_name =os.getenv("AZURE_SEARCH_INDEX_NAME"),
-        embeddin_function=embeddings.embed_query
+        azure_search_endpoint = os.getenv("AZURE_SEARCH_ENDPOINT"),
+        azure_search_key = os.getenv("AZURE_SEARCH_API_KEY"),
+        index_name = os.getenv("AZURE_SEARCH_INDEX_NAME"),
+        embedding_function = embeddings.embed_query
     )
 
     #RAG 
