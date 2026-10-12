@@ -44,7 +44,7 @@ class VideoIndexerService:
             f"/generateAccessToken?api-version=2024-01-01" 
         )
         
-        headers = {"Authorization" : f"Bearder {arm_access_token}"}
+        headers = {"Authorization": f"Bearer {arm_access_token}"}
         payload = {"permissionType" : "Contributor" , "scope" : "Account"}
         response = requests.post(url,headers=headers,json=payload)
         if response.status_code != 200:
@@ -81,8 +81,9 @@ class VideoIndexerService:
         # upload vid tp azure vi
         
     def upload_video(self,video_path,video_name):
+        # add in azure a role to the storage blob service (storage blob contributer) and make it a managed one , link it to azure vi service
         arm_token = self.get_access_token()
-        vi_token = self.get_access_token(arm_token)
+        vi_token = self.get_account_token(arm_token)
 
         api_url = f"https://api.videoindexer.ai/{self.location}/Accounts/{self.account_id}/Videos"
 
@@ -113,16 +114,14 @@ class VideoIndexerService:
             params = { "accessToken" : vi_token}
             response = requests.get(url,params=params)
             data = response.json()
-
             state = data.get('state')
-            
             if state == "Processed":
                 return data
             elif state == "Failed":
                 raise Exception("Video indexing Failed in azure")
             elif state == "Quarantined":
                 raise Exception("Video quarantined copyright/content policy violation")
-            logger.info(f"Status {state}........30s")
+            logger.info(f"Status : {state}........30s")
             time.sleep(30)
     def extract_data(self,vi_json):
         '''
