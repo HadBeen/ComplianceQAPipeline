@@ -90,7 +90,7 @@ def audio_content_node(state:VideoAuditState) -> Dict[str,Any]:
         )
     
     embeddings = AzureOpenAIEmbeddings(
-        azure_deployment = os.getenv("AZURE_OPENAI_EMBEDDING_DEPLOYMENT"),
+        azure_deployment = os.getenv("AZURE_OPENAI_EMBEDDING_DEPLOYMENT","text-embedding-3-small"),
         openai_api_version = os.getenv("AZURE_OPENAI_API_VERSION"),
     )
     
@@ -145,8 +145,11 @@ def audio_content_node(state:VideoAuditState) -> Dict[str,Any]:
         ])
         
         content = response.content
-        if"```json" in content:
-            content = re.search(r"```(?:json?)(.?)```", content, re.DOTALL).group(1)
+
+        
+        if"```" in content:
+            content = re.search(r"```(?:json)?(.*?)```", content, re.DOTALL).group(1)
+            # content = re.search(r"```json\s*(.*?)\s*```", content, re.DOTALL)
         audit_data = json.loads(content.strip())    
         # why retun fail here
         # because if the llm fails to return a valid json, it will raise an exception and we will catch it and return fail

@@ -50,7 +50,7 @@ def run_cli_simulation():
 
         print("\n [VIOLATION DETECTED]")
         
-        results = final_state.get('comliance_resuls',[])
+        results = final_state.get('compliance_results',[])
         if results:
             for issue in results:
                 print(f"-[{issue.get('severity')}] [{issue.get('category')}] : [{issue.get('description')}]")
