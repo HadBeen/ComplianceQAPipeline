@@ -121,9 +121,6 @@ class VideoIndexerService:
             
             state = data.get("state")
             if state == "Processed":
-                print('==============================')
-                print(f'managed to return data')
-                print('==============================')
                 return data
             elif state == "Failed":
                 raise Exception("Video Indexing Failed in Azure.")

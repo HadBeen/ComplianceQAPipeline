@@ -36,7 +36,7 @@ app = FastAPI(
 
 class AuditRequest(BaseModel):
     '''
-    invalid : 422 erro
+    invalid : 422 error
     {"videdo_url":1236}
     
     '''
@@ -82,7 +82,7 @@ async def audit_video(request:AuditRequest):
             session_id=session_id,
             video_id=final_state.get("video_id"),
             status = final_state.get("final_status","UNKNOWN"),
-            final_report= final_state.get("finla_report","No report generated"),
+            final_report= final_state.get("final_report","No report generated"),
             compliance_results=final_state.get("compliance_results",[])
             
         )
