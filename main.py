@@ -30,6 +30,7 @@ def run_cli_simulation():
 
     # define the initial state
     initial_inputs = {
+        # "video_url":"https://youtu.be/tFDn4l0PpR4",
         "video_url":"https://youtu.be/xGhIVEyxayg",
         "video_id":f"vid_{session_id[:8]}",
         "compliance_results":[],
