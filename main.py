@@ -60,7 +60,7 @@ def run_cli_simulation():
             print("No violations detected")        
 
         print('\n [FINAL SUMMARY]')
-        print(final_state.get('final_report'))
+        print(final_state.get('final_repport'))
 
     except Exception as e:
         logger.error(f"Workflow execution failed : {e}")
