@@ -146,8 +146,6 @@ An AI-generated compliance assessment should be treated as decision support rath
 
 ## About
 
-Developed by **Hadjer Benali**, AI Engineer and Data Scientist.
-
 This project explores the intersection of multimodal AI, workflow orchestration, and evidence-based automated evaluation.
 
 
